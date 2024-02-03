@@ -60,7 +60,7 @@ router.put("/blog/:id", async (req, res) => {
 
 router.delete("/delete/:id", async (req, res) => {
   try {
-    const blog = await Blogs.deleteOne({ _id: req.params.id });
+    const blog = await Blogs.deleteOne({ _id: req.params.id.toString() });
 
     if (!blog) {
       return res.status(404).json({ message: "Blog not found" });
