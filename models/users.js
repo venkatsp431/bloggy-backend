@@ -28,7 +28,19 @@ const userSchema = new mongoose.Schema({
   blogs: [
     {
       type: ObjectId,
-      ref: "blogs",
+      ref: "blogs", // Reference to the Blog model
+    },
+  ],
+  notifications: [
+    {
+      message: {
+        type: String,
+        required: true,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
 });

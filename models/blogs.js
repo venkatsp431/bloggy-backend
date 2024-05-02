@@ -21,6 +21,29 @@ const blogSchema = new mongoose.Schema({
     type: Date,
     default: getDateOnly,
   },
+  user: {
+    type: ObjectId,
+    ref: "users", // Reference to the User model
+  },
+  comments: [
+    {
+      user: {
+        type: ObjectId,
+        ref: "users",
+      },
+      postId: {
+        type: String,
+      },
+      text: {
+        type: String,
+        required: true,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
 });
 
 const Blogs = mongoose.model("blogs", blogSchema);

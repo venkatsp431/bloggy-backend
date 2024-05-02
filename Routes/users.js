@@ -5,32 +5,32 @@ import { isAuthenticated } from "../Auth/auth.js";
 
 const router = express.Router();
 
-const createAdminUser = async () => {
-  try {
-    // Check if an admin user already exists
-    const adminExists = await Users.findOne({ role: "admin" });
+// const createAdminUser = async () => {
+//   try {
+//     // Check if an admin user already exists
+//     const adminExists = await Users.findOne({ role: "admin" });
 
-    if (!adminExists) {
-      // If no admin user exists, create one
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash("adminpassword", salt); // Set a secure password
+//     if (!adminExists) {
+//       // If no admin user exists, create one
+//       const salt = await bcrypt.genSalt(10);
+//       const hashedPassword = await bcrypt.hash("adminpassword", salt); // Set a secure password
 
-      const adminUser = await new Users({
-        name: "Admin Name",
-        email: "admin@example.com",
-        contact: "1234567890",
-        password: hashedPassword,
-        role: "admin", // Set the role to "admin"
-      }).save();
+//       const adminUser = await new Users({
+//         name: "Admin Name",
+//         email: "admin@example.com",
+//         contact: "1234567890",
+//         password: hashedPassword,
+//         role: "admin", // Set the role to "admin"
+//       }).save();
 
-      console.log("Admin user created:", adminUser);
-    } else {
-      console.log("Admin user already exists.");
-    }
-  } catch (error) {
-    console.error("Error creating admin user:", error);
-  }
-};
+//       console.log("Admin user created:", adminUser);
+//     } else {
+//       console.log("Admin user already exists.");
+//     }
+//   } catch (error) {
+//     console.error("Error creating admin user:", error);
+//   }
+// };
 
 // Call the function to create an admin user
 // createAdminUser();
@@ -87,13 +87,14 @@ router.get("/profile", isAuthenticated, async (req, res) => {
     if (!user) {
       return res.status(400).json("User not found");
     }
-    const { name, email, contact, role } = user;
+    const { name, email, contact, role, notifications } = user;
 
     const userProfile = {
       name,
       email,
       contact,
       role,
+      notifications,
     };
 
     res.status(200).json(userProfile);
@@ -106,11 +107,9 @@ router.post("/addcategory", isAuthenticated, async (req, res) => {
   try {
     // Check if the user has the admin role
     if (req.user.role !== "admin") {
-      return res
-        .status(403)
-        .json({
-          message: "Permission denied. Only admins can add categories.",
-        });
+      return res.status(403).json({
+        message: "Permission denied. Only admins can add categories.",
+      });
     }
 
     // Add category creation logic here
